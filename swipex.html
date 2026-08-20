@@ -1,0 +1,647 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareerFlow</title>
+
+  <style>
+    :root {
+      --ink: #102a43;
+      --muted: #526b84;
+      --blue: #1769e0;
+      --light: #eaf4ff;
+      --line: #c9e0fb;
+      --green: #057a55;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(135deg, #0b4fa8, #1685e8 55%, #74c3ff);
+      min-height: 100vh;
+    }
+
+    .app-shell {
+      width: min(960px, calc(100% - 32px));
+      margin: auto;
+      padding: 24px 0 60px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 52px;
+    }
+
+    .brand {
+      color: white;
+      font-size: 24px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .brand span { color: #cdeeff; }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 36px;
+      box-shadow: 0 16px 45px #06336c55;
+      max-width: 780px;
+      margin: auto;
+    }
+
+    .narrow { max-width: 510px; }
+
+    h1 { margin: 0 0 10px; font-size: 32px; }
+    h2 { margin: 0 0 8px; font-size: 22px; }
+
+    p {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .center { text-align: center; }
+
+    .role-grid,
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .role {
+      text-align: left;
+      padding: 24px 18px;
+      background: #fafdff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      cursor: pointer;
+      color: var(--ink);
+    }
+
+    .role:hover {
+      border-color: var(--blue);
+      transform: translateY(-3px);
+    }
+
+    .role-icon {
+      font-size: 30px;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .role strong { display: block; }
+    .role small { color: var(--muted); display: block; margin-top: 6px; }
+
+    label {
+      display: block;
+      font-weight: 650;
+      font-size: 14px;
+      margin: 20px 0 8px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #b9d5ef;
+      border-radius: 10px;
+      font: inherit;
+      color: var(--ink);
+    }
+
+    textarea { min-height: 105px; }
+
+    .button {
+      border: 0;
+      color: white;
+      border-radius: 10px;
+      background: var(--blue);
+      padding: 12px 18px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 15px;
+      margin-top: 24px;
+    }
+
+    .text-button {
+      background: none;
+      border: 0;
+      color: white;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .hidden { visibility: hidden; }
+
+    .steps {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin: 22px 0 32px;
+    }
+
+    .step {
+      height: 7px;
+      width: 56px;
+      border-radius: 9px;
+      background: #dceafa;
+    }
+
+    .step.active { background: var(--blue); }
+
+    .match {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 18px;
+      background: var(--light);
+      border-radius: 14px;
+      margin: 20px 0;
+    }
+
+    .score {
+      width: 86px;
+      height: 86px;
+      border: 8px solid #48a3ff;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .tag {
+      display: inline-block;
+      background: #e1f1ff;
+      color: #075db9;
+      padding: 5px 9px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 650;
+      margin: 5px 4px 0 0;
+    }
+
+    .job-card {
+      max-width: 570px;
+      margin: auto;
+      overflow: hidden;
+    }
+
+    .job-top {
+      height: 95px;
+      background: linear-gradient(125deg, #0d5bbb, #32a3f4);
+      padding: 22px;
+    }
+
+    .company {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: white;
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .job-body { padding: 26px; }
+
+    .job-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 17px 0;
+    }
+
+    .pill {
+      background: #eaf4ff;
+      border-radius: 20px;
+      padding: 6px 10px;
+      color: #275575;
+      font-size: 13px;
+    }
+
+    .salary {
+      font-weight: 750;
+      color: var(--green);
+      margin: 16px 0;
+    }
+
+    .swipe-actions {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .swipe {
+      border: 0;
+      width: 120px;
+      padding: 13px;
+      border-radius: 11px;
+      cursor: pointer;
+      font-weight: 750;
+      font-size: 15px;
+    }
+
+    .skip { background: #fff0f0; color: #d92d20; }
+    .apply { background: #e1f1ff; color: #075db9; }
+
+    .stat {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    .stat b {
+      font-size: 26px;
+      display: block;
+    }
+
+    .application {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status {
+      border: 0;
+      border-radius: 8px;
+      padding: 8px;
+      background: #eaf4ff;
+    }
+
+    .success {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 25px;
+    }
+
+    @media (max-width: 650px) {
+      header { margin-bottom: 28px; }
+      .panel { padding: 24px 20px; }
+      .role-grid, .dashboard-grid { grid-template-columns: 1fr; }
+      .application { align-items: flex-start; flex-direction: column; }
+      h1 { font-size: 27px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app-shell">
+    <header>
+      <a class="brand" href="#">Career<span>Flow</span></a>
+      <button id="logout" class="text-button hidden">Log out</button>
+    </header>
+
+    <section id="screen" aria-live="polite"></section>
+  </main>
+
+  <script>
+    const jobs = [
+      {
+        title: "Frontend Developer",
+        company: "Nexora Labs",
+        location: "Bengaluru · Hybrid",
+        type: "Full-time",
+        salary: "₹9–14 LPA",
+        match: 94,
+        tags: ["React", "JavaScript", "CSS"]
+      },
+      {
+        title: "UI Engineer",
+        company: "Orbit Systems",
+        location: "Remote",
+        type: "Full-time",
+        salary: "₹8–12 LPA",
+        match: 88,
+        tags: ["TypeScript", "React", "Figma"]
+      },
+      {
+        title: "Web Developer",
+        company: "Pixel Works",
+        location: "Chennai · On-site",
+        type: "Full-time",
+        salary: "₹7–10 LPA",
+        match: 82,
+        tags: ["HTML", "CSS", "Node.js"]
+      }
+    ];
+
+    const state = {
+      role: null,
+      jobIndex: 0,
+      applications: []
+    };
+
+    const screen = document.querySelector("#screen");
+    const logout = document.querySelector("#logout");
+
+    function setScreen(html) {
+      screen.innerHTML = html;
+      logout.classList.toggle("hidden", !state.role);
+    }
+
+    function loginScreen() {
+      setScreen(`
+        <div class="panel narrow">
+          <div class="center">
+            <h1>Welcome back</h1>
+            <p>Sign in to find your next opportunity.</p>
+          </div>
+
+          <label>Email address</label>
+          <input id="email" type="email" placeholder="you@example.com">
+
+          <label>Password</label>
+          <input id="password" type="password" placeholder="Enter your password">
+
+          <button id="login" class="button">Log in</button>
+          <p id="login-error" class="success center"></p>
+        </div>
+      `);
+    }
+
+    function roleScreen() {
+      setScreen(`
+        <div class="panel center">
+          <h1>Welcome to CareerFlow</h1>
+          <p>Choose how you want to use the platform.</p>
+
+          <div class="role-grid">
+            <button class="role" data-role="seeker">
+              <span class="role-icon">👤</span>
+              <strong>Job Seeker</strong>
+              <small>Find roles matched to your skills</small>
+            </button>
+
+            <button class="role" data-role="recruiter">
+              <span class="role-icon">💼</span>
+              <strong>Recruiter</strong>
+              <small>Post jobs and review candidates</small>
+            </button>
+
+            <button class="role" data-role="admin">
+              <span class="role-icon">⚙️</span>
+              <strong>Admin</strong>
+              <small>Manage platform settings</small>
+            </button>
+          </div>
+        </div>
+      `);
+    }
+
+    function resumeScreen() {
+      setScreen(`
+        <div class="panel narrow">
+          <div class="steps">
+            <i class="step active"></i><i class="step"></i><i class="step"></i>
+          </div>
+
+          <h1>Tell us about your profile</h1>
+          <p>Upload a resume or add your skills to generate relevant job matches.</p>
+
+          <label>Resume</label>
+          <input type="file" accept=".pdf,.doc,.docx">
+
+          <label>Key skills</label>
+          <input value="React, JavaScript, CSS">
+
+          <button id="analyse" class="button">Analyse profile</button>
+        </div>
+      `);
+    }
+
+    function analysisScreen() {
+      setScreen(`
+        <div class="panel narrow">
+          <h1>Profile analysis complete</h1>
+          <p>We extracted your main skills and found jobs that fit your experience.</p>
+
+          <div class="match">
+            <div class="score">94%</div>
+            <div>
+              <strong>Strong job-market fit</strong>
+              <p>Based on your skills and role preferences.</p>
+            </div>
+          </div>
+
+          ${["React", "JavaScript", "CSS", "Git", "REST APIs"]
+            .map(skill => `<span class="tag">${skill}</span>`)
+            .join("")}
+
+          <br>
+          <button id="view-jobs" class="button">View recommended jobs</button>
+        </div>
+      `);
+    }
+
+    function jobScreen() {
+      const job = jobs[state.jobIndex];
+
+      if (!job) {
+        setScreen(`
+          <div class="panel narrow empty">
+            <h1>You’re all caught up</h1>
+            <p>We’ll alert you when new matches arrive.</p>
+            <button class="button" id="restart">Review jobs again</button>
+          </div>
+        `);
+        return;
+      }
+
+      setScreen(`
+        <article class="panel job-card">
+          <div class="job-top">
+            <div class="company">${job.company[0]}</div>
+          </div>
+
+          <div class="job-body">
+            <span class="tag">${job.match}% match</span>
+            <h1>${job.title}</h1>
+            <p>${job.company}</p>
+
+            <div class="job-meta">
+              <span class="pill">${job.location}</span>
+              <span class="pill">${job.type}</span>
+            </div>
+
+            <div class="salary">${job.salary}</div>
+
+            ${job.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}
+
+            <div class="swipe-actions">
+              <button class="swipe skip" id="skip">← Skip</button>
+              <button class="swipe apply" id="apply">Apply →</button>
+            </div>
+          </div>
+        </article>
+      `);
+    }
+
+    function applyScreen() {
+      const job = jobs[state.jobIndex];
+
+      setScreen(`
+        <div class="panel narrow">
+          <h1>Apply for ${job.title}</h1>
+          <p>Your profile will be shared with ${job.company}.</p>
+
+          <label>Full name</label>
+          <input value="Alex Johnson">
+
+          <label>Email</label>
+          <input type="email" value="alex@example.com">
+
+          <label>Short note</label>
+          <textarea>I’m excited to apply for this role.</textarea>
+
+          <button id="submit" class="button">Submit application</button>
+        </div>
+      `);
+    }
+
+    function recruiterScreen() {
+      const applicants = state.applications.length
+        ? state.applications
+        : [
+            { name: "Alex Johnson", role: "Frontend Developer", status: "Applied" },
+            { name: "Priya Sharma", role: "Frontend Developer", status: "Shortlisted" }
+          ];
+
+      setScreen(`
+        <div class="panel">
+          <h1>Recruiter dashboard</h1>
+          <p>Review applicants for your active roles.</p>
+
+          <div class="dashboard-grid">
+            <div class="stat"><b>${applicants.length}</b><span>Applicants</span></div>
+            <div class="stat"><b>4</b><span>Active jobs</span></div>
+            <div class="stat"><b>1</b><span>Interviews</span></div>
+          </div>
+
+          <h2>Frontend Developer</h2>
+
+          ${applicants.map(applicant => `
+            <div class="application">
+              <div>
+                <strong>${applicant.name}</strong>
+                <p>${applicant.role} · 94% compatible</p>
+              </div>
+
+              <select class="status">
+                <option>${applicant.status}</option>
+                <option>Shortlisted</option>
+                <option>Interview</option>
+                <option>Selected</option>
+              </select>
+            </div>
+          `).join("")}
+        </div>
+      `);
+    }
+
+    function adminScreen() {
+      setScreen(`
+        <div class="panel narrow">
+          <h1>System management</h1>
+
+          <div class="dashboard-grid">
+            <div class="stat"><b>1,284</b><span>Job seekers</span></div>
+            <div class="stat"><b>84</b><span>Recruiters</span></div>
+            <div class="stat"><b>116</b><span>Active jobs</span></div>
+          </div>
+        </div>
+      `);
+    }
+
+    screen.addEventListener("click", event => {
+      const role = event.target.closest("[data-role]")?.dataset.role;
+
+      if (event.target.id === "login") {
+        const email = document.querySelector("#email").value.trim();
+        const password = document.querySelector("#password").value.trim();
+
+        if (!email || !password) {
+          document.querySelector("#login-error").textContent =
+            "Please enter your email and password.";
+          return;
+        }
+
+        roleScreen();
+        return;
+      }
+
+      if (role) {
+        state.role = role;
+
+        if (role === "seeker") resumeScreen();
+        else if (role === "recruiter") recruiterScreen();
+        else adminScreen();
+
+        return;
+      }
+
+      if (event.target.id === "analyse") analysisScreen();
+      if (event.target.id === "view-jobs") jobScreen();
+
+      if (event.target.id === "skip") {
+        state.jobIndex++;
+        jobScreen();
+      }
+
+      if (event.target.id === "apply") applyScreen();
+
+      if (event.target.id === "submit") {
+        state.applications.push({
+          name: "Alex Johnson",
+          role: jobs[state.jobIndex].title,
+          status: "Applied"
+        });
+
+        state.jobIndex++;
+
+        setScreen(`
+          <div class="panel narrow center">
+            <h1>Application submitted</h1>
+            <p class="success">Your application has been sent to the recruiter.</p>
+            <button id="view-jobs" class="button">Continue browsing</button>
+          </div>
+        `);
+      }
+
+      if (event.target.id === "restart") {
+        state.jobIndex = 0;
+        jobScreen();
+      }
+    });
+
+    logout.onclick = () => {
+      state.role = null;
+      state.jobIndex = 0;
+      loginScreen();
+    };
+
+    loginScreen();
+  </script>
+</body>
+</html>
+```
